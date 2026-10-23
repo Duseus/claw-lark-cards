@@ -1,125 +1,135 @@
 <div align="center">
 
-# 🕊️ claw-lark-cards — OpenClaw 飞书通道原生流式卡片插件
+# 🌉 claw-lark-cards
 
-**OpenClaw 飞书 / Lark 通道插件：CardKit v2.0 流式消息 · Hermes 风格顶级卡片 · 实时工具步骤追踪 · 一键停止按钮 · 自适应长文本保护 · 统一指标面板 · 峰谷价标识**
+**OpenClaw 飞书 / Lark 通道插件：CardKit v2.0 流式消息 · 派发即建卡 · 打字机效果 · 实时工具步骤面板 · 统一指标栏 · Hermes 风格卡片**
 
-[![Release](https://img.shields.io/github/v/release/Duseus/claw-lark-cards?label=%E7%89%88%E6%9C%AC&color=2563eb)](https://github.com/Duseus/claw-lark-cards/releases/latest)
 [![CI](https://img.shields.io/github/actions/workflow/status/Duseus/claw-lark-cards/ci.yml?branch=main&label=CI)](https://github.com/Duseus/claw-lark-cards/actions/workflows/ci.yml)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-%E2%89%A5%202026.5.4-2463eb)](https://openclaw.ai)
 [![Node](https://img.shields.io/badge/Node.js-%E2%89%A5%2022-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![License](https://img.shields.io/github/license/Duseus/claw-lark-cards?label=%E8%AE%B8%E5%8F%AF&color=f59e0b)](LICENSE)
 
-[特性](#-特性) · [快速安装](#-快速安装) · [核心配置](#-配置指南) · [Hermes卡片模式](#-hermes-原生流式卡片体系hermescardstyle-默认强化) · [开发](#-本地开发与测试) · [致敬与致谢](#-致敬与致谢-credits--acknowledgments) · [许可证](#-许可证)
+[特性](#-特性) · [安装](#-安装) · [配置](#-配置) · [面板功能](#-统一面板完成态底部折叠面板) · [开发](#-开发) · [相关项目](#-相关项目) · [许可证](#-许可证)
 
 <img src="assets/card-demo.png" width="860" alt="卡片效果示例">
 
 </div>
 
-> **这是什么**：一个专为 **OpenClaw Agent** 深度打造的**飞书 / Lark 原生通道插件**（完全替代官方已停更的 `@larksuite/openclaw-lark` / `@openclaw/feishu`）。负责 OpenClaw Agent 的全功能飞书消息收发，并以 **CardKit v2.0 原生流式卡片 + Hermes 风格顶级状态面板** 呈现每一轮交互。  
-> **项目背景与独立维护说明**：本项目基于社区优秀的开源项目 [techysy/claw-fry-cards](https://github.com/techysy/claw-fry-cards) 深度二次研发，由 **Duseus** 团队作为独立代码仓维护。在全面吸收 upstream 优秀卡片架构的基础上，补齐了 Hermes 级原生卡片视觉规范、流式实时命令执行透明化、一键物理停止生成按钮、自适应长卡片撑爆保护，以及针对 OpenClaw 2.0 (2026.10.x+) 底层 SQLite 转录的深度融合适配。
+> ### 🙏 致敬
+>
+> 本项目基于 [techysy/claw-fry-cards](https://github.com/techysy/claw-fry-cards)（MIT）深度改造而来——感谢 [@techysy](https://github.com/techysy) 与 fry-cards 系列（🍟 [hermes-fry-cards](https://github.com/techysy/hermes-fry-cards) · 🕊️ [feige-fry-cards](https://github.com/techysy/feige-fry-cards)）打下的优秀卡片体验基线；再往上，感谢官方 [larksuite/openclaw-lark](https://github.com/larksuite/openclaw-lark)（MIT），以及 [@Mirr0ch1](https://github.com/Mirr0ch1) 完成的 OpenClaw 2.0 基础适配。
+>
+> 我们在其之上做了超出「补丁」量级的深度定制——hermesCardStyle 卡片 2.0 改版、流式前置工具步骤面板、间距体系、trace 去重修复——故独立建仓维护。**上游的所有功劳归于上游。**
+
+> **这是什么**：一个**飞书通道插件**（替代官方 `@larksuite/openclaw-lark` / 内置 `@openclaw/feishu`），负责 OpenClaw Agent 的飞书消息收发，并用 CardKit v2.0 流式卡片呈现每一轮回复。
+> **为什么存在**：官方通道插件停更于 2026-07-16，未适配 OpenClaw 2.0（SDK 导出重构、会话存储迁移 SQLite），在新版网关上无法加载。本项目完成了 2.0 适配，并将流式卡片体验升级到 fry-cards 系列风格，再按自身需求持续演进。
+
+> ℹ️ **命名说明**：本仓库与 techysy 早期的 `claw-lark-cards`（已并入 `claw-fry-cards` 的前身）无继承关系，仅沿用「lark-cards」这个直白的名字；血脉上我们来自 `claw-fry-cards`。
 
 ---
 
-## 🙏 致敬与致谢 (Credits & Acknowledgments)
+## 🧭 版本说明
 
-开源的繁荣源于巨人的肩膀与社区的不断接力，特此向以下上游项目与开发者致以崇高敬意：
+当前 **`main` 分支 = 3.x 通道插件**，是唯一维护线（`v3.0.1+` 基线 + 本仓库定制提交）。形态自 2.0 起固定为通道插件：替代官方通道，卡片引擎内置于通道。
 
-1. **[techysy/claw-fry-cards](https://github.com/techysy/claw-fry-cards)**：
-   - 感谢 **techysy** 开拓并实现了将 CardKit 2.0 流式消息、打字机动画、峰谷计费标识与折叠指标面板融为一体的经典架构；
-   - 感谢上游在 2026.10.x SDK 兼容垫片上的扎实探索，本项目继承并拓展了其核心能力。
-2. **[larksuite/openclaw-lark](https://github.com/larksuite/openclaw-lark)**：
-   - 感谢飞书官方团队与早期社区贡献者构建的飞书通道底层通信桥梁。
-3. **[@Mirr0ch1](https://github.com/Mirr0ch1)**：
-   - 感谢其在早期为 OpenClaw 2.0 基础适配所奠定的重要基础。
+上游的 `v1.0.0` 标签是早期的**钩子伴侣插件形态**（官方通道继续收发、不替换通道），早已冻结，仅为历史保留，**新装请直接用 `main`**。
+
+**插件 id 保持 `claw-fry-cards` 不变**——这是有意为之：已装用户的配置键 `plugins.entries.claw-fry-cards` 无需迁移，存量配置零破坏。npm 上 `claw-fry-cards` 包名归上游所有，本仓库通过**源码安装**（见下）。
 
 ---
 
-## ✨ 核心亮点与深度改造
+## ✨ 特性
 
-### 1. 🕊️ Hermes 原生流式卡片体系（`hermesCardStyle` 默认强化）
+### 1. 通道基础能力（承自官方，2.0 全量适配）
 
-全面对齐 Hermes / Antigravity 工业级飞书流式交互规范，告别粗糙纯文本与散乱卡片：
+- 💬 **消息全覆盖**：群聊 / 单聊收发、话题回复、消息搜索、图片 / 文件上传下载。
+- 📄 **云文档交互**：云文档创建、更新、读取。
+- 📊 **多维表格**：数据表 / 字段 / 记录 CRUD、批量操作、高级筛选、视图。
+- 📈 **电子表格**：在线电子表格创建、编辑、查看。
+- 📅 **日历与任务**：日程管理、参会人忙闲查询；任务 / 清单 / 评论全周期追踪。
 
-- 🎨 **Card 2.0 顶级彩色状态条 Header**：
-  - 💭 **处理中...**（流式思考生成中，采用清爽的 `blue` 蓝条，调用工具时动态指示 `⚡ {toolName}: {command/detail}`）；
-  - ✅ **已完成**（正常收官，优雅的 `green` 绿条）；
-  - ❌ **执行出错 / 已停止**（异常即时红条预警，错误原因一目了然）。
-- 🛠️ **实时工具流水透明化与动态命令展示**：
-  - 首创在思考流式阶段注入折叠进度条：`🧠 1 轮 · 🛠️ N 个工具 · ⏳ 0.0 秒`；
-  - 实时解析工具入参与脚本命令，动态透视正在执行的操作细节（如 `Run command: git status`），等待不再两眼一抹黑！
-- ⏹️ **流式物理停止按钮（一键打断）**：
-  - 在生成中的卡片底部原生注入 **「⏹️ 停止生成」** 交互按钮；用户一键点击直接毫秒级中断本地会话执行，并即时弹出飞书 Toast 反馈！
-- 🛡️ **自适应长文本截断保护（Anti-Runaway）**：
-  - 对单个超长工具输出（如数千行编译日志或数据转储）进行智能折叠截断保护，彻底防止飞书单卡 30KB 撑爆导致的卡片报错退化！
-- 📝 **极简 3 行流式小字底栏**：
-  - **Line 1（状态与指标）**：`✅ 已完成 · 38.7s · ⚕glm-5.3-flash · 输入 31.8K 输出 1.6K 思考 859 · 31.8K/128K (25%)`；
-  - **Line 2（实时环境）**：`☀️ 杭州 26.0/20.0°C · 湿度 88% · 空气质量 70 · 日出 06:03 日落 17:23`（异步静默极速直达）；
-  - **Line 3（人文底蕴）**：`💬 「黄沙百战穿金甲，不破楼兰终不还。」—— 从军行七首·其四`。
+### 2. 🍤 流式卡片（增强体验）
 
-### 2. ⚡ 原生 CardKit 打字机与零等待
+- ⚡ **派发即建卡**：用户消息到达 1 秒内建立“处理中”卡片，杜绝空白等待焦虑。
+- ✍️ **打字机输出**：基于 CardKit streaming_mode 客户端动画，回复文字流畅逐字上屏。
+- 🎯 **统一指标面板**：完成态底部收归单一折叠面板，一行带全关键指标（模型 · 思考 · 工具 · 上下文 · 缓存 · Token · 速率 · 耗时）。
+- 🛠️ **实时工具步骤面板**：流式生成阶段即可看到工具调用逐步点亮（去重修复保证不重影、不残留假运行态）。
+- 🎨 **状态感知边框**：边框颜色随终态反馈变化（绿=完成 · 红=出错 · 黄=中断）；展开后清晰呈现思考过程与工具调用明细。
+- ⏱️ **峰谷计费标识**：按时间窗口自动切换 DeepSeek 等模型的显示名（如工作日高峰显示`梁文锋⚡️`、谷段显示`梁文谷⚡️`）。
+- 🏷️ **灵活别名映射**：大小写不敏感匹配，支持按星期、时段自动切换模型名称展示。
+- 📊 **原生会话指标**：实时读取 OpenClaw agent transcript SQLite，准确统计 token 与上下文水位。
 
-- **派发即建卡**：用户消息到达 1 秒内建立响应卡片，杜绝网络与冷启动空白等待焦虑；
-- **打字机流畅上屏**：依托飞书 CardKit 原生 `streaming_mode`，字符行云流水滚动更新；
-- **代码块排版抗撕裂**：彻底修复代码块包裹中的换行转义与 `<br>` 破损问题，Markdown 原样高保真呈现。
+### 3. 🕊️ Hermes 原生流式卡片模式（`hermesCardStyle`）
 
-### 3. 🎯 统一折叠指标面板与峰谷计费
+对齐 Hermes Gateway 原生飞书流式卡片的高级视觉体系：
 
-- **一站式指标概览**：耗时、Tokens 消耗、上下文占用百分比、Cache 命中率、推理速度（tok/s）单行优雅汇总；
-- **峰谷计费自动变身**：支持工作日峰谷段切换模型显示名（如 DeepSeek 峰段显示 `梁文锋⚡️` / 谷段显示 `梁文谷⚡️`），成本尽在掌握。
+1. **顶级 Card 2.0 状态彩条 Header**：
+   - 💭 处理中...（流式生成态，蓝色 `blue` 模板，有工具时自动追加 `⚡ {toolName}`）
+   - ✅ 已完成（正常终态，绿色 `green` 模板）
+   - 出错 / 已停止（异常终态，红色 `red` 模板）
+2. **极简紧凑折叠面板 Header**：
+   - 格式：`🧠 1 轮 · 🛠️ 0 个工具 · ⏳ 0.0 秒`
+   - 点开可展开查看完整思考链过程与逐步工具调用追踪。
+3. **底部 3 行流式卡片状态底栏（附注小字号）**：
+   - **Line 1（状态与核心指标）**：`✅ 已完成 · 38.7s · ⚕deepseek-v4.1-flash · 输入 31.8K 输出 1.6K 思考 859 · 31.8K/128K (25%)`
+   - **Line 2（实时天气与空气质量）**：`☀️ 临平 26.0/20.0°C · 湿度 88% · 空气质量 70 · 日出 06:03 日落 17:23`（异步静默缓存）
+   - **Line 3（文学名句一言）**：`💬 「黄沙百战穿金甲，不破楼兰终不还。」—— 从军行七首·其四`
 
-### 4. 🚀 OpenClaw 2.0 (2026.10.x+) 深度原生契合
+### 4. OpenClaw 2.0 底层适配
 
-- **直接对齐新架构**：全面适配 OpenClaw 2.0+ 的 SQLite 转录架构，指标直接读取 `openclaw-agent.sqlite`，彻底告别废弃的 `sessions.json`；
-- **全链路兼容垫片**：内置 `@openclaw/plugin-sdk` 10.x 完整接口契约。
+- 全面迁移 SDK 导入路径（`openclaw/plugin-sdk` → `plugin-sdk/core` 等 100+ 处）。
+- 升级类型定义（`ClawdbotConfig` → `OpenClawConfig`），对齐运行时配置 API。
+- 会话指标源自 SQLite 数据库提取，不再依赖已废弃的 `sessions.json`。
+- 保留官方 TypeScript 构建链路，规范产出标准 ESM 产物。
 
 ---
 
-## 📦 快速安装
+## 📦 安装
 
 **环境要求**：
-- OpenClaw ≥ 2026.5.4（强烈推荐 **2026.10.3+**）
+
+- OpenClaw ≥ 2026.5.4（推荐 **2026.9.4+**）
 - Node.js ≥ 22
 
-### 方式一：一键脚本构建安装（推荐 · Agent 友好）
+> npm 上 `claw-fry-cards` 包名归上游 [techysy/claw-fry-cards](https://github.com/techysy/claw-fry-cards) 所有，本仓库**不发同名包**，统一走源码安装。
+
+### 方式一：一键脚本（推荐 · Agent 友好）
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Duseus/claw-lark-cards/main/install.sh | bash
 ```
 
-脚本将自动克隆当前仓库源码、构建 ESM 产物并注册到 OpenClaw 网关。安装完成后重启网关生效：
+脚本自动定位 OpenClaw CLI → 克隆本仓库 → 构建产物 → 注册插件并校验（可用 `LARK_REF=<分支或标签>` 指定版本，`LARK_DIR=/path` 指定源码目录）。安装完成后需手动重启网关：
 
 ```bash
 openclaw gateway restart
 ```
 
-### 方式二：源码克隆安装
+### 方式二：从源码构建安装
 
 ```bash
-# 1. 克隆 Duseus 独立代码仓库
 git clone https://github.com/Duseus/claw-lark-cards.git
 cd claw-lark-cards
-
-# 2. 安装依赖并构建 ESM 产物
 npm install --legacy-peer-deps
-npm run build
+npm run build        # 产物输出至 dist/
 
-# 3. 安装并注册到 OpenClaw
 openclaw plugins install . --force --accept-capabilities
-
-# 4. 重启网关生效
 openclaw gateway restart
 ```
 
-> ⚠️ **卸载旧版官方通道**：若系统之前装有旧版官方通道，请先执行 `openclaw plugins uninstall feishu --force`，防止插件版本冲突。
+> ⚠️ 若之前使用过官方通道，请先执行清理：`openclaw plugins uninstall feishu --force` 并移除 `plugins.entries.feishu` 配置项，防止宿主收敛机制自动回装旧版本。
+>
+> ⚠️ **宿主升级后必查**：OpenClaw 升级到 2026.10.x 后，宿主会自动安装并启用官方 `@openclaw/feishu` 通道插件，与本插件抢占 `feishu` 通道。修复：`openclaw plugins disable feishu`，重启后冲突消失。
 
 ---
 
-## ⚙️ 配置指南
+## ⚙️ 配置
 
-在 `~/.openclaw/openclaw.json` 中配置飞书凭据与流式面板：
+<div align="center">
+<img src="assets/settings-panel.png" width="860" alt="Control UI 配置页">
+</div>
 
-> 💡 **架构贴士**：为保持与现有配置及 Control UI 设置项的 100% 向上兼容，底层插件配置节点维持 `claw-fry-cards` 键名不变，存量配置无缝平滑迁移。
+在 `~/.openclaw/openclaw.json` 中配置：
 
 ```json
 {
@@ -144,16 +154,10 @@ openclaw gateway restart
         "enabled": true,
         "config": {
           "panel": {
-            "hermesCardStyle": true,
             "unifiedPanelMinDuration": 5,
             "contextDisplayMode": "text",
-            "peakValley": {
-              "deepseek": {
-                "peakName": "梁文锋⚡️",
-                "valleyName": "梁文谷⚡️",
-                "schedule": "deepseek"
-              }
-            }
+            "peakValley": { "deepseek": { "peakName": "梁文锋⚡️", "valleyName": "梁文谷⚡️", "schedule": "deepseek" } },
+            "modelAliases": { "mimo/mimo-v2.5": "小虾米" }
           }
         }
       }
@@ -162,31 +166,155 @@ openclaw gateway restart
 }
 ```
 
+### 流式卡片三层开关（排障核对标准）
+
+| 层级           | 配置（2026.9.4+）                | 配置（旧版 ≤2026.9.1） | 说明                                                                                            |
+| -------------- | -------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------- |
+| ① **总开关**   | `streaming: { mode: "partial" }` | `streaming: true`      | 未配置此开关则恒定输出为纯文本（`mode: "off"` 关闭）                                            |
+| ② **交互模式** | 无需额外配置（2.0.6 起默认流式） | 同左                   | **群聊与私聊默认统一采用流式卡片**；若群聊需保持安静可显式配置 `replyMode: { group: "static" }` |
+| ③ **工具展示** | 默认开启                         | 默认开启               | `toolUseDisplay` 缺省即开启，自动展示工具调用步骤                                               |
+
+> ⚠️ **注意**：飞牛/本地部署请将凭据配置在 `channels.feishu.*` 下，勿混写至插件配置中。
+> 飞牛 / 飞书开放平台应用须开通：`im:message`（消息收发）与 `cardkit:card`（卡片操作权限）。推荐采用 `websocket` 模式直连。
+
 ---
 
-## 🧪 本地开发与测试
+## 🎯 统一面板（完成态底部折叠面板）
+
+当 Agent 回复生成完成时，底部会自动注入统计面板。面板支持在 **Control UI → 设置 → Claw Fry Cards** 界面进行全中文可视化配置。
+
+| 项           | 规则与行为                                                                                                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **标题格式** | `🍤 ⇲模型 · 💭N · 🔧N · 368.6k/1.0m (37%) · 💾 86% · 🎫 1.5k · ⚡ 42.3 tok/s · ⏱️ 13.3s`（显示哪些段、什么顺序由 `panel.fields` 决定；缺失字段自适应省略） |
+| **展开内容** | 模型的完整思考推导记录 + 工具调用顺序流水；两项均空时呈现“暂无思考与工具调用过程”                                                                          |
+| **展示触发** | 单次交互耗时 ≥ 5 秒，**或**会话中包含了思考/工具调用步骤                                                                                                   |
+| **边框反馈** | 绿色（成功完成）· 红色（执行异常）· 黄色（任务被手动停止）                                                                                                 |
+
+### 核心面板选项（`panel`）
+
+| 参数                      | 说明                                                                                       | 默认值 |
+| ------------------------- | ------------------------------------------------------------------------------------------ | ------ |
+| `hermesCardStyle`         | 启用 Hermes 风格原生流式卡片（顶级彩条 Header + 紧凑折叠标题 + 3行指标/天气/一言底栏）     | `false`|
+| `unifiedPanelMinDuration` | 面板常驻显示的耗时门槛（秒）。耗时超出该阈值或含有工具调用时渲染，`0` 表示全量显示         | `5`    |
+| `contextDisplayMode`      | 上下文消耗指标呈现格式：`text` (`129.3k/1.0m (13%)`)、`bar` (`[██▓░░░░░] 13%`)、`text_bar` | `text` |
+| `truncateModelName`       | 超长模型名自适应截断（如 `mimo/mimo-v2.5` → `⇲mimo-v2.5`）                                 | `true` |
+| `modelAliases`            | 模型重命名与分时段人设映射字典                                                             | `{}`   |
+| `peakValley`              | 针对特定模型的峰谷电价式名称映射配置                                                       | `{}`   |
+| `fields`                  | 面板标题要显示哪些段、以及显示顺序（**有序数组**），见下节                                 | 全字段 |
+
+**`fields` 面板字段**（**有序数组**——数组顺序即标题从左到右的顺序，未列出的段不显示；删除整个字段则回落默认全字段顺序）：
+
+```jsonc
+// 只显示 模型名 · 缓存命中 · 输出 · 耗时，并按此顺序排列
+"panel": { "fields": ["model", "cache", "output", "elapsed"] }
+```
+
+| 字段值      | 显示内容                                                       |
+| ----------- | -------------------------------------------------------------- |
+| `model`     | 模型名（含别名/⇲ 截断）                                        |
+| `reasoning` | 💭N 思考计数                                                   |
+| `tools`     | 🔧N 工具调用计数                                               |
+| `context`   | 上下文占用（样式见 `contextDisplayMode`）                      |
+| `cache`     | 💾 缓存命中率 `cacheRead/(input+read+write)`                   |
+| `output`    | 🎫 会话累计输出 tokens                                         |
+| `speed`     | ⚡ 本轮生成速度 tok/s（transcript 时间戳推算，不含工具执行段） |
+| `elapsed`   | ⏱️ 本轮回合耗时                                                |
+
+- **缺省**（不配 `fields`）：等价于全字段，顺序 `model → reasoning → tools → context → cache → output → speed → elapsed`
+- **空数组** `[]`：标题只留 `🍤`，不显示任何指标段
+- 无论是否列出，**该段数据缺失时仍会自动省略**（如无缓存计量则不显示 💾）
+
+**面板设置**：在 **Control UI → 设置 → Claw Fry Cards → 配置页** 可视化编辑（全中文字段说明），存储于插件自有配置 `plugins.entries.claw-fry-cards.config.panel`——随插件版本化，不受宿主 schema 演化影响（旧位置 `channels.feishu.panel` 仍兼容读取）：
+
+> 🔥 **全部热更新**：保存后网关自动检测并应用（agent 正忙时重载排队，干完自动生效），**无需重启网关**；正在生成的回复不受影响，下一条消息即用新值。
+
+```json
+"panel": {
+  "unifiedPanelMinDuration": 5,
+  "contextDisplayMode": "text",
+  "truncateModelName": true,
+  "modelAliasesEnabled": true,
+  "fields": ["model", "reasoning", "tools", "context", "cache", "output", "speed", "elapsed"]
+}
+```
+
+### ⏱️ 按时间切换显示名（峰谷价 / 时段人设）
+
+面板模型名支持按时间窗自动切换显示——典型用途是 DeepSeek 的**峰谷价标识**（峰段梁文锋⚡️ / 谷段梁文谷⚡️，一眼看出当前计费档位），也适用于任何时段人设。
+
+**配置入口：Control UI → 设置 → Claw Fry Cards → 配置页**，全部可视化编辑，无需手写 JSON：
+
+| 想要                         | 在配置页操作                                                                                                                      |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 峰谷价标识（推荐，两行搞定） | 展开 **Peak Valley** → 添加条目 → 键填匹配模型（如 `deepseek`）→ 值里填峰时显示 / 谷时显示 → 时间表下拉选择                       |
+| 模型别名（含时段规则）       | 展开 **Model Aliases** → 添加条目 → 键填匹配模型子串（如 `mimo`）→ 值里填名称，需要时段切换就加时段规则（星期逐项勾选、起止时间） |
+| 纯别名（不按时段）           | 同上，值只填名称字符串                                                                                                            |
+
+- **匹配**：键对完整模型名做大小写不敏感子串匹配，按插入顺序第一条命中即生效（`mimo` 命中 `mimo/mimo-v2.5`）
+- **时间表**（峰谷价专用预置）：`deepseek`（工作日 9:00–12:00 & 14:00–18:00 峰段）/ `workday-918` / `everyday-day` / `always-peak` / `custom`
+- 时段规则里 `days` 星期逐项选择（`0`=周日），`start`/`end` 为北京时间 HH:MM，支持跨午夜；规则都不命中时回落默认名称（即"其他时间"）
+- 两种写法可共存：peakValley 运行时展开为等价时段规则，同键时 Model Aliases 手写条目优先；别名命中优先于 ⇲ 截断；**Model Aliases Enabled** 开关可整体关闭别名
+
+<details>
+<summary>对应的 openclaw.json 配置（直改配置文件时参考）</summary>
+
+```json
+"panel": {
+  "peakValley": {
+    "deepseek": { "peakName": "梁文锋⚡️", "valleyName": "梁文谷⚡️", "schedule": "deepseek" },
+    "gemini":   { "peakName": "Gemini☀️",  "valleyName": "Gemini🌙",  "schedule": "workday-918" }
+  },
+  "modelAliases": {
+    "deepseek": {
+      "name": "梁文谷⚡️",
+      "timeAliases": [
+        { "days": [1, 2, 3, 4, 5], "start": "09:00", "end": "12:00", "name": "梁文锋⚡️" },
+        { "days": [1, 2, 3, 4, 5], "start": "14:00", "end": "18:00", "name": "梁文锋⚡️" }
+      ]
+    },
+    "mimo": "小虾米"
+  }
+}
+```
+
+</details>
+
+> 指标来源是 agent transcript SQLite（`~/.openclaw/agents/<agent>/agent/openclaw-agent.sqlite`），模型名/token/上下文窗口由最近一轮 usage 事件解析；💾 缓存命中率 = 本轮 cacheRead/(input+read+write)，⚡ 速度 = 本轮 output ÷ 生成耗时（本轮 assistant 事件与前一条事件的时间戳差，不含工具执行段，>30 分钟视为异常省略）。显示哪些段与顺序由 `panel.fields` 有序数组决定；无论是否列出，该段数据缺失时都自动省略。老版本宿主无此库时统一面板自动省略指标段（详见 [docs/compat-test-report.md](docs/compat-test-report.md)）。
+
+---
+
+## 🧪 开发
 
 ```bash
-# 安装开发依赖
+# 安装依赖
 npm install --legacy-peer-deps
 
-# 编译 ESM 模块至 dist/
+# 编译 ESM 产物 (dist/)
 npm run build
 
-# 自动化测试
+# 运行自动化测试
 npm test
 
-# 严格类型检查
+# 类型安全检查
 npm run typecheck
 ```
 
 ---
 
-## 🔒 免责与安全说明
+## 🔗 相关项目
 
-- 本项目由 **Duseus** 团队在遵循开源许可证的前提下独立维护演进；
-- 请妥善保管飞书开放平台的 App ID 与 App Secret，严禁将私密凭据提交至公共版本控制系统中。
+- [🍟 techysy/claw-fry-cards](https://github.com/techysy/claw-fry-cards) — 本项目的上游基线
+- [🍟 hermes-fry-cards](https://github.com/techysy/hermes-fry-cards) — Hermes Gateway 飞书流式卡片插件
+- [🕊️ feige-fry-cards](https://github.com/techysy/feige-fry-cards) — 跨 Agent 战报结果汇报插件
+- [🌉 zcode-feishu-bridge](https://github.com/techysy/zcode-feishu-bridge) — ZCode 会话转飞书流式卡片桥接器
+
+---
+
+## 🔒 安全与归属
+
+- **上游归属**：基于 [larksuite/openclaw-lark](https://github.com/larksuite/openclaw-lark)（MIT）与 [techysy/claw-fry-cards](https://github.com/techysy/claw-fry-cards)（MIT），OpenClaw 2.0 基础适配归功于 [@Mirr0ch1](https://github.com/Mirr0ch1)， fry 体验基线归功于 [@techysy](https://github.com/techysy)。本仓库的增量改动同样以 MIT 协议开放。
+- **安全声明**：OpenClaw 具备本地命令执行及自动化能力，飞书应用凭据切勿泄漏。建议将机器人作为**私聊办公助手**使用，加入公开群聊时需谨慎配置访问与审批策略。
 
 ## 📄 许可证
 
-本项目基于 [MIT](LICENSE) 许可证开源发布。
+[MIT](LICENSE)
