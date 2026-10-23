@@ -88,7 +88,9 @@ export function recordToolUseStart(params: {
   const now = Date.now();
 
   // 去重：若已存在相同 toolCallId，或相同工具名在 running 状态且参数/时间相近的步骤，原地更新避免重复插入
-  const sanitizedParams = sanitizeTraceValue(toolParams, 0, { source: 'params' }) as Record<string, unknown> | undefined;
+  const sanitizedParams = sanitizeTraceValue(toolParams, 0, { source: 'params' }) as
+    | Record<string, unknown>
+    | undefined;
   if (toolCallId) {
     for (let index = state.steps.length - 1; index >= 0; index -= 1) {
       const step = state.steps[index];

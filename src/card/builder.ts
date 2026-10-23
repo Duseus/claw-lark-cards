@@ -1,4 +1,10 @@
-import { buildHermesHeader, getHermesWeather, getHermesHitokoto, formatElapsedHermes, compactHermesNumber } from './hermes-footer';
+import {
+  buildHermesHeader,
+  compactHermesNumber,
+  formatElapsedHermes,
+  getHermesHitokoto,
+  getHermesWeather,
+} from './hermes-footer';
 /**
  * Copyright (c) 2026 ByteDance Ltd. and/or its affiliates
  * SPDX-License-Identifier: MIT
@@ -542,7 +548,8 @@ export function buildCardContent(
         showToolUse: data.showToolUse,
         toolUseSteps: data.toolUseSteps,
         toolUseTitleSuffix: data.toolUseTitleSuffix,
-      });    case 'complete':
+      });
+    case 'complete':
       return buildCompleteCard({
         text: data.text ?? '',
         elapsedMs: data.elapsedMs,
@@ -832,8 +839,10 @@ function buildCompleteCard(params: {
       const roundsCount = hasReasoning ? 1 : 0;
       const toolElapsed = toolUseElapsedMs || 0;
       const toolSec = toolElapsed / 1000;
-      const toolElapsedStr = toolSec < 60 ? `${toolSec.toFixed(1)} 秒` : `${Math.floor(toolSec / 60)} 分 ${Math.round(toolSec % 60)} 秒`;
-      const toolElapsedStrEn = toolSec < 60 ? `${toolSec.toFixed(1)}s` : `${Math.floor(toolSec / 60)}m ${Math.round(toolSec % 60)}s`;
+      const toolElapsedStr =
+        toolSec < 60 ? `${toolSec.toFixed(1)} 秒` : `${Math.floor(toolSec / 60)} 分 ${Math.round(toolSec % 60)} 秒`;
+      const toolElapsedStrEn =
+        toolSec < 60 ? `${toolSec.toFixed(1)}s` : `${Math.floor(toolSec / 60)}m ${Math.round(toolSec % 60)}s`;
       titleContentZh = `🧠 ${roundsCount} 轮 · 🛠️ ${toolCount} 个工具 · ⏳ ${toolElapsedStr}`;
       titleContentEn = `🧠 ${roundsCount} round${roundsCount === 1 ? '' : 's'} · 🛠️ ${toolCount} tool${toolCount === 1 ? '' : 's'} · ⏳ ${toolElapsedStrEn}`;
     }
@@ -938,7 +947,11 @@ function buildCompleteCard(params: {
     }
     if (footerZhLines.length > 0) {
       elements.push(
-        ...buildFooter(footerZhLines.join(String.fromCharCode(10)), footerEnLines.join(String.fromCharCode(10)), isError),
+        ...buildFooter(
+          footerZhLines.join(String.fromCharCode(10)),
+          footerEnLines.join(String.fromCharCode(10)),
+          isError,
+        ),
       );
     }
   }
@@ -1193,10 +1206,7 @@ function capStreamingToolUseSteps(steps: ToolUseDisplayStep[]): ToolUseDisplaySt
  * - 标题带实时状态 “工具执行中”，完成态换成耗时统计
  * - 超预算的早期步骤折叠进标题（+N 更早步骤），不撞 300305
  */
-function buildStreamingToolUseActivePanel(params: {
-  steps: ToolUseDisplayStep[];
-  hiddenCount?: number;
-}): CardElement {
+function buildStreamingToolUseActivePanel(params: { steps: ToolUseDisplayStep[]; hiddenCount?: number }): CardElement {
   const { steps, hiddenCount = 0 } = params;
   const enParts = ['Tool use'];
   const zhParts = ['工具执行中'];
@@ -1241,7 +1251,7 @@ function buildStreamingToolUseActivePanel(params: {
   };
 }
 
-function buildToolUsePanel(params: {
+function _buildToolUsePanel(params: {
   toolUseSteps?: ToolUseDisplayStep[];
   toolUseElapsedMs?: number;
   titleSuffix?: { zh: string; en: string };

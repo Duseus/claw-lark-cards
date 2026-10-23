@@ -89,7 +89,6 @@ export function getHermesWeather(): string {
       ).then((r) => r.json()),
     ])
       .then(([w, a]: [any, any]) => {
-        const t = w?.current?.temperature_2m ?? 24;
         const rh = w?.current?.relative_humidity_2m ?? 80;
         const maxT = w?.daily?.temperature_2m_max?.[0] ?? 26;
         const minT = w?.daily?.temperature_2m_min?.[0] ?? 19;
@@ -141,7 +140,5 @@ export function getHermesHitokoto(): string {
   const cur = _hitokotoCache;
   if (cur) return cur;
   const q = _fallbackHitokotos[Math.floor(Math.random() * _fallbackHitokotos.length)];
-  return q.includes('——')
-    ? `💬 「${q.split('——')[0].trim()}」—— ${q.split('——')[1].trim()}`
-    : `💬 「${q}」`;
+  return q.includes('——') ? `💬 「${q.split('——')[0].trim()}」—— ${q.split('——')[1].trim()}` : `💬 「${q}」`;
 }
