@@ -2,7 +2,7 @@
 
 # 🌉 claw-lark-cards
 
-**OpenClaw 飞书 / Lark 通道插件：CardKit v2.0 流式消息 · 派发即建卡 · 打字机效果 · 实时工具步骤面板 · 统一指标栏 · Hermes 风格卡片**
+**OpenClaw 飞书 / Lark 通道插件：CardKit v2.0 流式消息 · Hermes 风格顶级卡片 · 实时工具步骤追踪 · 一键停止按钮 · 自适应长文本保护 · 统一指标面板 · 峰谷价标识**
 
 [![CI](https://img.shields.io/github/actions/workflow/status/Duseus/claw-lark-cards/ci.yml?branch=main&label=CI)](https://github.com/Duseus/claw-lark-cards/actions/workflows/ci.yml)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-%E2%89%A5%202026.5.4-2463eb)](https://openclaw.ai)
@@ -52,6 +52,9 @@
 
 - ⚡ **派发即建卡**：用户消息到达 1 秒内建立“处理中”卡片，杜绝空白等待焦虑。
 - ✍️ **打字机输出**：基于 CardKit streaming_mode 客户端动画，回复文字流畅逐字上屏。
+- 🛠️ **实时工具流水透明化**：实时解析工具入参与脚本命令，动态透视正在执行的操作细节（如 `Run command: git status`），等待不再两眼一抹黑。
+- ⏹️ **流式物理停止按钮**：生成中的卡片底部原生注入「⏹️ 停止生成」按钮，一键毫秒级打断本地会话执行，并即时弹出飞书 Toast 反馈。
+- 🛡️ **长文本截断保护（Anti-Runaway）**：对单个超长工具输出（如数千行编译日志或数据转储）智能折叠截断，防止飞书单卡 30KB 撑爆导致的卡片报错退化。
 - 🎯 **统一指标面板**：完成态底部收归单一折叠面板，一行带全关键指标（模型 · 思考 · 工具 · 上下文 · 缓存 · Token · 速率 · 耗时）。
 - 🛠️ **实时工具步骤面板**：流式生成阶段即可看到工具调用逐步点亮（去重修复保证不重影、不残留假运行态）。
 - 🎨 **状态感知边框**：边框颜色随终态反馈变化（绿=完成 · 红=出错 · 黄=中断）；展开后清晰呈现思考过程与工具调用明细。
